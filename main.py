@@ -1,6 +1,9 @@
 import logging
 import random
+import threading
 from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 from telegram.constants import ChatMemberStatus
@@ -40,7 +43,7 @@ def greeting_by_time():
     else:
         return "🌙 Good Evening"
 
-# === Get period number ===
+
 def get_period():
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%Y%m%d")
@@ -49,7 +52,7 @@ def get_period():
     previous = f"{date_str}1000{10001 + total_minutes - 1}"
     return previous, current
 
-# === Format prediction output ===
+
 def format_prediction_output(user_id, period, result, prev_period):
     user_last_prediction[user_id] = (prev_period, result)
 
@@ -64,7 +67,7 @@ def format_prediction_output(user_id, period, result, prev_period):
     return (
         "```\n"
         "┏━━━━━━━━━━━━━━━┓\n"
-        "┃ PREDICTION AI BOT  ┃\n"
+        "┃ PREDICTION AI BOT ┃\n"
         "┗━━━━━━━━━━━━━━━┛\n"
         "```"
         f"🧠 *Wingo 1 Min Hack*\n"
@@ -77,7 +80,7 @@ def format_prediction_output(user_id, period, result, prev_period):
         "👨‍💻 *Dev:* @GodXAshura"
     )
 
-# === Check if user joined ===
+
 async def is_user_joined(context: ContextTypes.DEFAULT_TYPE, user_id: int) -> bool:
     try:
         member = await context.bot.get_chat_member(chat_id=f"@{CHANNEL_USERNAME}", user_id=user_id)
@@ -86,7 +89,7 @@ async def is_user_joined(context: ContextTypes.DEFAULT_TYPE, user_id: int) -> bo
         logger.warning(f"Error checking membership: {e}")
         return False
 
-# === Start Command ===
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     greeting = greeting_by_time()
@@ -102,14 +105,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(
             "*Access Denied*\n\n"
-            "Please join our channel to use the bot:\n"
-            f"🔗 [Join Now](https://t.me/{CHANNEL_USERNAME})\n\n"
+            f"Please join our channel:\n🔗 [Join Now](https://t.me/Allbotsandhack})\n\n"
             "_After joining, return here and press /start._\n\n"
             "👨‍💻 *Dev:* @GodXAshura",
             parse_mode="Markdown"
         )
 
-# === Button Handler ===
+
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user = query.from_user
@@ -118,8 +120,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user.id != OWNER_ID and not await is_user_joined(context, user.id):
         await query.edit_message_text(
             "*Access Denied*\n\n"
-            "🔗 [Join the channel first](https://t.me/{channel})\n\n"
-            "_Then press /start to continue._".format(channel=CHANNEL_USERNAME),
+            f"🔗 [Join the channel first](https://t.me/Allbotsandhack})\n\n"
+            "_Then press /start to continue._",
             parse_mode="Markdown"
         )
         return
@@ -138,7 +140,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     elif query.data == "support":
-        await query.edit_message_text("⌛ Loading support info...", parse_mode="Markdown")
         await query.edit_message_text(
             "*Need Help?*\n\n"
             "Message support:\n"
@@ -149,7 +150,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     elif query.data == "download":
-        await query.edit_message_text("⌛ Loading download links...", parse_mode="Markdown")
         await query.edit_message_text(
             "*Download Game & Activate Hack*\n\n"
             "Register using any of the links below:\n\n"
@@ -170,8 +170,21 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=main_menu_keyboard
         )
 
+# === Dummy HTTP server ===
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running!")
+
+def run_web_server():
+    server = HTTPServer(('0.0.0.0', 8080), SimpleHandler)
+    server.serve_forever()
+
 # === Main ===
 def main():
+    threading.Thread(target=run_web_server).start()
+
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_handler))
