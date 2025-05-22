@@ -67,7 +67,7 @@ def format_prediction_output(user_id, period, result, prev_period):
     return (
         "```\n"
         "┏━━━━━━━━━━━━━━━┓\n"
-        "┃  PREDICTION AI BOT  ┃\n"
+        "┃ PREDICTION AI BOT  ┃\n"
         "┗━━━━━━━━━━━━━━━┛\n"
         "```"
         f"🧠 *Wingo 1 Min Hack*\n"
