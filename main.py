@@ -97,7 +97,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user.id == OWNER_ID or await is_user_joined(context, user.id):
         await update.message.reply_text(
             f"{greeting}, *{user.first_name}*!\n\n"
-            "Welcome to *Ashura AI Hack Bot*.\n"
+            "Welcome to *AI Hack Bot*.\n"
             "Please choose an option below:",
             parse_mode="Markdown",
             reply_markup=main_menu_keyboard
