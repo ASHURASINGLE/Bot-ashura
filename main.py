@@ -10,13 +10,10 @@ BOT_TOKEN = "7730057723:AAFT_dT8hdlrbOFeJidm4tFyb7JwRkUdqF8"
 CHANNEL_USERNAME = "Allbotsandhack"
 OWNER_ID = 1016409707
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 user_last_prediction = {}
-
 
 main_menu_keyboard = InlineKeyboardMarkup([
     [InlineKeyboardButton("💻 Get Prediction", callback_data="get_prediction")],
@@ -145,18 +142,21 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(
             "*Need Help?*\n\n"
             "Message support:\n"
-            "📨 [@Ravankin](https://t.me/Ravankin)\n\n"
+            "📨 [@Rahulpro1](https://t.me/Rahulpro1)\n\n"
             "_Support is available 24/7._",
             parse_mode="Markdown",
             reply_markup=back_to_menu_keyboard
         )
 
     elif query.data == "download":
-        await query.edit_message_text("⌛ Loading download link...", parse_mode="Markdown")
+        await query.edit_message_text("⌛ Loading download links...", parse_mode="Markdown")
         await query.edit_message_text(
             "*Download Game & Activate Hack*\n\n"
-            "Click the link below to register and start:\n\n"
-            "🔗 [Register Now](https://www.91appi.com/#/register?invitationCode=23848286654)\n\n"
+            "Register using any of the links below:\n\n"
+            "1. [Jalwa](https://www.Jalwa.org/#/register?invitationCode=34368633464)\n"
+            "2. [Sikkimin](https://sikkimin.com/#/register?invitationCode=65277140032)\n"
+            "3. [TashanWin](http://www.tashanwin.club/#/register?invitationCode=66718202302)\n"
+            "4. [91club](https://www.91appi.com/#/register?invitationCode=23848286654)\n\n"
             "👨‍💻 *Dev:* @GodXAshura",
             parse_mode="Markdown",
             reply_markup=back_to_menu_keyboard
@@ -179,4 +179,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-  
