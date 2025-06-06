@@ -2,154 +2,267 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>ASHURA DT AI – Prediction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASHURA PRIME LOGIN</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #000;
-      color: #fff;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+
+    .circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      background-color: #1e293b;
+      border: 2px solid #64748b;
       display: flex;
-      justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 20px;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 4px #334155;
     }
 
-    .container {
-      background-color: #111;
-      padding: 30px 20px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.3);
+    .circle.filled.T {
+      background-color: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
     }
 
-    h2 {
-      color: #00ccff;
-      text-align: center;
-      margin-bottom: 25px;
+    .circle.filled.D {
+      background-color: #f43f5e;
+      box-shadow: 0 0 8px #f43f5e;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 6px;
-      background-color: #222;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0033cc;
-      color: #fff;
+    .circle-label {
       font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 16px;
+      color: #fff;
     }
 
-    button:hover {
-      background-color: #0055ff;
+    #predictionBox {
+      transition: all 0.5s ease;
+      opacity: 0;
+      transform: scale(0.9);
     }
 
-    hr {
-      border: 0;
-      height: 1px;
-      background-color: #333;
-      margin: 20px 0;
+    #predictionBox.show {
+      opacity: 1;
+      transform: scale(1);
     }
 
-    @media (max-width: 480px) {
-      h2 {
-        font-size: 20px;
-      }
+    .loader {
+      border: 4px solid #334155;
+      border-top: 4px solid #38bdf8;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
 
-      input, button {
-        font-size: 15px;
-        padding: 10px;
-      }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .server-active {
+      background-color: #dc2626 !important;
+      box-shadow: 0 0 12px 2px rgba(239, 68, 68, 0.8);
+      color: #fff !important;
+      font-weight: bold;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h2>ASHURA PRIME LOGIN</h2>
+<body class="p-4">
 
-    <!-- Login Form -->
-    <input type="email" id="loginEmail" placeholder="Login Email" />
-    <input type="password" id="loginPassword" placeholder="Login Password" />
-    <button onclick="login()">Login</button>
-
-    <hr />
-
-    <!-- Registration Form -->
-    <input type="email" id="regEmail" placeholder="Register Email" />
-    <input type="password" id="regPassword" placeholder="Register Password" />
-    <input type="text" id="regPhone" placeholder="Phone Number" />
-    <button onclick="register()">Register</button>
+  <!-- Sidebar -->
+  <div id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-900 shadow-xl z-50 p-4 hidden md:block">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-yellow-400">ASHURA DT AI</h2>
+      <button onclick="toggleSidebar()" class="text-white text-2xl">&times;</button>
+    </div>
+    <a href="https://t.me/+zCTKwWYH6EA0OGQ1" target="_blank"
+       class="block bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white text-center px-4 py-2 rounded shadow">Join Telegram</a>
   </div>
 
+  <button onclick="toggleSidebar()" class="md:hidden fixed top-4 left-4 z-50 bg-yellow-400 text-black px-3 py-1 rounded shadow font-bold">☰</button>
+
+  <div class="max-w-4xl mx-auto mt-8 space-y-8">
+    <h1 class="text-4xl font-extrabold text-center text-yellow-400 tracking-wide">ASHURA DT AI</h1>
+
+    <!-- Device Info -->
+    <div class="text-center text-sm">
+      <p>📱 Device ID: <span id="deviceId" class="text-green-400 font-mono"></span></p>
+      <p>💰 Coins Left: <span id="coinBalance" class="text-yellow-300 font-bold"></span></p>
+    </div>
+
+    <!-- Server Buttons -->
+    <div class="flex justify-center gap-3">
+      <button id="server1" onclick="setPatternCount(5, 'server1')" class="server-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">Server 1 (5)</button>
+      <button id="server2" onclick="setPatternCount(8, 'server2')" class="server-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">Server 2 (8)</button>
+      <button id="server3" onclick="setPatternCount(10, 'server3')" class="server-btn bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">Server 3 (10)</button>
+    </div>
+
+    <!-- Pattern -->
+    <div id="pattern" class="flex justify-center gap-3 mb-2"></div>
+
+    <!-- Input Buttons -->
+    <div class="flex justify-center gap-6">
+      <button onclick="addToPattern('T')" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow flex items-center gap-2">🐯 TIGER</button>
+      <button onclick="addToPattern('D')" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded shadow flex items-center gap-2">🐉 DRAGON</button>
+    </div>
+
+    <!-- Predict -->
+    <div class="text-center mt-4">
+      <button onclick="predict()" class="bg-yellow-400 text-black font-bold px-8 py-2 rounded-full shadow hover:bg-yellow-300">Predict</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loader" class="mt-4 hidden"><div class="loader"></div></div>
+
+    <!-- Prediction Result -->
+    <div id="predictionBox" class="mt-4 text-center max-w-sm mx-auto px-6 py-4 rounded-xl bg-gray-800 shadow text-3xl font-bold text-cyan-300 hidden"></div>
+
+    <!-- History -->
+    <div class="bg-gray-800 p-4 rounded-xl shadow mt-6">
+      <h3 class="text-lg font-semibold mb-3 text-white">📜 Prediction History</h3>
+      <ul id="historyList" class="space-y-2 text-sm text-white/80 list-disc pl-5"></ul>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDTjq5sknDg2SSmdN2fbtnirj9jAA6wxyo",
-      authDomain: "shurs-7d0bd.firebaseapp.com",
-      databaseURL: "https://shurs-7d0bd-default-rtdb.firebaseio.com",
-      projectId: "shurs-7d0bd",
-      storageBucket: "shurs-7d0bd.firebasestorage.app",
-      messagingSenderId: "789512168670",
-      appId: "1:789512168670:android:cc1c52edf1031464768e4f"
+      apiKey: "AIzaSyC-_rrKCbTq3igWlzkb_6FskpQaZs3T_j8",
+      authDomain: "ashurastore.firebaseapp.com",
+      databaseURL: "https://ashurastore-default-rtdb.firebaseio.com",
+      projectId: "ashurastore",
+      storageBucket: "ashurastore.appspot.com",
+      messagingSenderId: "339476615746",
+      appId: "1:339476615746:web:f3d1ae26ae7390c070d83d"
     };
-
     firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    function login() {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+    let pattern = [];
+    let patternCount = 8;
+    const deviceId = localStorage.getItem('deviceId') || generateDeviceId();
 
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
-          window.location.href = "product.html";
-        })
-        .catch(error => {
-          alert("Login Failed: " + error.message);
-        });
+    function generateDeviceId() {
+      const id = Math.floor(100000 + Math.random() * 900000).toString();
+      localStorage.setItem('deviceId', id);
+      return id;
     }
 
-    function register() {
-      const email = document.getElementById("regEmail").value;
-      const password = document.getElementById("regPassword").value;
-      const phone = document.getElementById("regPhone").value;
+    function setPatternCount(count, buttonId) {
+      patternCount = count;
+      pattern = [];
+      updatePatternUI();
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          const uid = userCredential.user.uid;
-          return firebase.database().ref("users/" + uid).set({
-            email: email,
-            phone: phone
+      document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('server-active'));
+      if (buttonId) document.getElementById(buttonId).classList.add('server-active');
+    }
+
+    function addToPattern(val) {
+      if (pattern.length < patternCount) {
+        pattern.push(val);
+        updatePatternUI();
+      }
+    }
+
+    function updatePatternUI() {
+      const container = document.getElementById('pattern');
+      container.innerHTML = '';
+      for (let i = 0; i < patternCount; i++) {
+        const filled = pattern[i] || '';
+        const div = document.createElement('div');
+        div.className = `circle ${filled ? 'filled ' + filled : ''}`;
+        div.innerHTML = filled ? `<span class="circle-label">${filled}</span>` : '';
+        container.appendChild(div);
+      }
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    }
+
+    function superIntelligentPrediction(patternArray) {
+      // Replace with advanced logic
+      const tigerCount = patternArray.filter(p => p === 'T').length;
+      const dragonCount = patternArray.filter(p => p === 'D').length;
+      return dragonCount > tigerCount ? 'TIGER' : 'DRAGON';
+    }
+
+    function predict() {
+      if (pattern.length !== patternCount) {
+        alert("Please complete the pattern.");
+        return;
+      }
+
+      const loader = document.getElementById('loader');
+      const box = document.getElementById('predictionBox');
+      loader.classList.remove('hidden');
+      box.classList.add('hidden');
+
+      db.ref("users/" + deviceId + "/coins").once("value").then(snapshot => {
+        const coins = snapshot.val() || 0;
+        if (coins <= 0) {
+          loader.classList.add('hidden');
+          alert("❌ Not enough coins.");
+          return;
+        }
+
+        setTimeout(() => {
+          const result = superIntelligentPrediction(pattern);
+          loader.classList.add('hidden');
+          box.innerText = result;
+          box.classList.remove('hidden');
+          box.classList.add('show');
+
+          db.ref("users/" + deviceId + "/coins").set(coins - 1);
+          db.ref("users/" + deviceId + "/history").push({
+            pattern: pattern.join(''),
+            result: result,
+            timestamp: Date.now()
           });
-        })
-        .then(() => {
-          alert("Registered Successfully! Please login.");
-        })
-        .catch(error => {
-          alert("Registration Failed: " + error.message);
-        });
+
+          pattern = [];
+          updatePatternUI();
+          loadCoins();
+          loadHistory();
+        }, 1500);
+      });
     }
+
+    function loadCoins() {
+      db.ref("users/" + deviceId + "/coins").once("value").then(snapshot => {
+        document.getElementById("coinBalance").innerText = snapshot.val() || 0;
+      });
+    }
+
+    function loadHistory() {
+      const list = document.getElementById("historyList");
+      list.innerHTML = '';
+      db.ref("users/" + deviceId + "/history").limitToLast(10).once("value").then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          Object.values(data).reverse().forEach(entry => {
+            const li = document.createElement("li");
+            const date = new Date(entry.timestamp);
+            li.textContent = `[${date.toLocaleTimeString()}] ${entry.pattern} → ${entry.result}`;
+            list.appendChild(li);
+          });
+        }
+      });
+    }
+
+    document.getElementById("deviceId").innerText = deviceId;
+    updatePatternUI();
+    loadCoins();
+    loadHistory();
   </script>
 </body>
 </html>
