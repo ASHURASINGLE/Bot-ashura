@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>ASHURA STORE - Premium APK Downloads</title>
     <link rel="stylesheet" href="styles/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -22,15 +25,25 @@
                 <li class="nav-item"><a href="#games" class="nav-link">Games</a></li>
                 <li class="nav-item"><a href="#categories" class="nav-link">Categories</a></li>
                 <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                <!-- Mobile Auth Menu Items -->
+                <div class="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
             </ul>
-            <div class="nav-auth">
-                <a href="login.html" class="btn btn-outline">Login</a>
-                <a href="register.html" class="btn btn-primary">Sign Up</a>
-            </div>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="nav-actions">
+                <button class="btn btn-icon search-btn" onclick="openSearch()" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="nav-auth nav-auth-desktop">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -39,17 +52,35 @@
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>100% Safe & Verified</span>
+                </div>
                 <h1 class="hero-title">Welcome to <span class="highlight">ASHURA STORE</span></h1>
                 <p class="hero-subtitle">Your premier destination for premium APK downloads. Discover thousands of apps and games, all verified and safe to download.</p>
                 <div class="hero-buttons">
-                    <a href="#apps" class="btn btn-primary btn-large">
+                    <a href="#apps" class="btn btn-primary btn-large hero-btn-primary">
                         <i class="fas fa-rocket"></i>
                         Explore Apps
                     </a>
-                    <a href="#featured" class="btn btn-glass btn-large">
+                    <a href="#featured" class="btn btn-glass btn-large hero-btn-secondary">
                         <i class="fas fa-star"></i>
                         Featured
                     </a>
+                </div>
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-download"></i>
+                        <span>Fast Downloads</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-shield-check"></i>
+                        <span>Virus Free</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Auto Updates</span>
+                    </div>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -70,6 +101,14 @@
                 <div class="phone-mockup">
                     <div class="phone-screen">
                         <div class="screen-content">
+                            <div class="screen-header">
+                                <div class="screen-time">9:41</div>
+                                <div class="screen-indicators">
+                                    <i class="fas fa-signal"></i>
+                                    <i class="fas fa-wifi"></i>
+                                    <i class="fas fa-battery-three-quarters"></i>
+                                </div>
+                            </div>
                             <div class="app-grid">
                                 <div class="app-icon"><i class="fab fa-android"></i></div>
                                 <div class="app-icon"><i class="fas fa-gamepad"></i></div>
