@@ -10,14 +10,19 @@
 </head>
 <body>
     <div class="auth-container">
-        <form class="auth-form" id="loginForm">
-            <div class="auth-logo">
+        <div class="auth-background">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+        <form class="auth-form glass" id="loginForm">
+            <div class="auth-logo gradient-text">
                 <i class="fas fa-mobile-alt"></i>
                 <span>ASHURA STORE</span>
             </div>
             
-            <h2>Welcome Back!</h2>
-            <p>Sign in to access your account and continue your APK journey</p>
+            <h2 class="gradient-text">Welcome Back!</h2>
+            <p>Sign in to access your account and continue your premium APK journey</p>
             
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -37,18 +42,21 @@
                 <a href="#" class="forgot-password">Forgot Password?</a>
             </div>
             
-            <button type="submit" class="auth-btn">Sign In</button>
+            <button type="submit" class="btn btn-primary btn-large auth-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
             
             <div class="divider">
                 <span>or continue with</span>
             </div>
             
             <div class="social-auth">
-                <button type="button" class="social-btn" onclick="loginWithGoogle()">
+                <button type="button" class="btn btn-glass social-btn" onclick="loginWithGoogle()">
                     <i class="fab fa-google"></i>
                     Google
                 </button>
-                <button type="button" class="social-btn" onclick="loginWithFacebook()">
+                <button type="button" class="btn btn-glass social-btn" onclick="loginWithFacebook()">
                     <i class="fab fa-facebook-f"></i>
                     Facebook
                 </button>

@@ -42,8 +42,14 @@
                 <h1 class="hero-title">Welcome to <span class="highlight">ASHURA STORE</span></h1>
                 <p class="hero-subtitle">Your premier destination for premium APK downloads. Discover thousands of apps and games, all verified and safe to download.</p>
                 <div class="hero-buttons">
-                    <a href="#apps" class="btn btn-primary btn-large">Explore Apps</a>
-                    <a href="#featured" class="btn btn-outline btn-large">Featured</a>
+                    <a href="#apps" class="btn btn-primary btn-large">
+                        <i class="fas fa-rocket"></i>
+                        Explore Apps
+                    </a>
+                    <a href="#featured" class="btn btn-glass btn-large">
+                        <i class="fas fa-star"></i>
+                        Featured
+                    </a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -97,7 +103,10 @@
                             <span class="rating"><i class="fas fa-star"></i> 4.8</span>
                             <span class="downloads"><i class="fas fa-download"></i> 2.5M</span>
                         </div>
-                        <button class="btn btn-primary">Download</button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
                     </div>
                 </div>
                 <div class="app-card">
@@ -112,7 +121,10 @@
                             <span class="rating"><i class="fas fa-star"></i> 4.9</span>
                             <span class="downloads"><i class="fas fa-download"></i> 5.8M</span>
                         </div>
-                        <button class="btn btn-primary">Download</button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
                     </div>
                 </div>
                 <div class="app-card">
@@ -127,7 +139,10 @@
                             <span class="rating"><i class="fas fa-star"></i> 4.7</span>
                             <span class="downloads"><i class="fas fa-download"></i> 8.2M</span>
                         </div>
-                        <button class="btn btn-primary">Download</button>
+                        <button class="btn btn-success">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
                     </div>
                 </div>
             </div>
@@ -297,6 +312,26 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Action Button -->
+    <button class="btn-floating" onclick="scrollToTop()" title="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Search Overlay (Hidden by default) -->
+    <div class="search-overlay" id="searchOverlay" style="display: none;">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" placeholder="Search for apps, games, or categories..." id="searchInput">
+                <button class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <button class="search-close" onclick="closeSearch()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
 
     <script src="scripts/main.js"></script>
 </body>

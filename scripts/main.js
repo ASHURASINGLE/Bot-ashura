@@ -240,27 +240,175 @@ function hideLoader() {
     }
 }
 
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initSearch();
+// Scroll to Top Function
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Search Overlay Functions
+function openSearch() {
+    const searchOverlay = document.getElementById('searchOverlay');
+    if (searchOverlay) {
+        searchOverlay.style.display = 'flex';
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            setTimeout(() => searchInput.focus(), 300);
+        }
+    }
+}
+
+function closeSearch() {
+    const searchOverlay = document.getElementById('searchOverlay');
+    if (searchOverlay) {
+        searchOverlay.style.display = 'none';
+    }
+}
+
+// Enhanced Navbar Scroll Effect
+function updateNavbarOnScroll() {
+    const navbar = document.querySelector('.navbar');
+    const floatingBtn = document.querySelector('.btn-floating');
     
-    // Add some interactive effects
+    if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+        if (floatingBtn) {
+            floatingBtn.classList.add('visible');
+        }
+    } else {
+        navbar.classList.remove('scrolled');
+        if (floatingBtn) {
+            floatingBtn.classList.remove('visible');
+        }
+    }
+}
+
+// Intersection Observer for Animations
+function createIntersectionObserver() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.app-card, .category-card, .feature-card');
+    animateElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(el);
+    });
+}
+
+// Enhanced Search with Keyboard Support
+function enhanceSearch() {
+    const searchInput = document.querySelector('#searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.toLowerCase();
+                if (query.trim()) {
+                    closeSearch();
+                    showMessage(`Searching for "${query}"...`, 'info');
+                    // Implement actual search logic here
+                }
+            } else if (e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+    }
+
+    // Global keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'k') {
+            e.preventDefault();
+            openSearch();
+        } else if (e.key === 'Escape') {
+            closeSearch();
+        }
+    });
+}
+
+// Parallax and Smooth Animations
+function initParallaxEffects() {
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        
+        // Parallax for hero section
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+        }
+
+        // Floating shapes animation
+        const shapes = document.querySelectorAll('.floating-shape');
+        shapes.forEach((shape, index) => {
+            const speed = 0.1 + (index * 0.05);
+            shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+        });
+    });
+}
+
+// Enhanced Button Interactions
+function enhanceButtonInteractions() {
     document.querySelectorAll('.btn').forEach(btn => {
         btn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
+            if (!this.classList.contains('btn-floating')) {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            }
         });
         
         btn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+            if (!this.classList.contains('btn-floating')) {
+                this.style.transform = 'translateY(0) scale(1)';
+            }
+        });
+
+        // Add ripple effect on click
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
         });
     });
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initSearch();
+    enhanceSearch();
+    createIntersectionObserver();
+    initParallaxEffects();
+    enhanceButtonInteractions();
     
-    // Parallax effect for hero section
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const hero = document.querySelector('.hero');
-        if (hero) {
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
-    });
+    // Enhanced scroll listener
+    window.addEventListener('scroll', updateNavbarOnScroll);
+    
+    // Initialize floating button visibility
+    updateNavbarOnScroll();
 });
