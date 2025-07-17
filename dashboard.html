@@ -162,7 +162,6 @@
             margin-bottom: 2rem;
         }
         .greeting-title { font-size: 1.8rem; font-weight: 700; }
-        .user-profile { font-weight: 500; color: var(--dark-gray); }
 
         /* Stats Cards */
         .stats-grid {
@@ -241,9 +240,7 @@
         <main class="main-content">
             <header class="main-header">
                 <h3 class="greeting-title">Overview</h3>
-                <div class="user-profile">
-                    Welcome, <span id="user-email-display">...</span>
-                </div>
+                <!-- Welcome message section has been removed -->
             </header>
             
             <section class="stats-grid">
@@ -302,7 +299,6 @@
         
         // --- 2. DOM ELEMENT REFERENCES ---
         const loader = document.querySelector('.loader-wrapper');
-        const userEmailDisplay = document.getElementById('user-email-display');
         const balanceDisplay = document.getElementById('balance-display');
         const totalOrdersDisplay = document.getElementById('total-orders-display');
         const logoutButton = document.getElementById('logout-button');
@@ -332,7 +328,7 @@
                 userRef.on('value', (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
-                        userEmailDisplay.textContent = data.email;
+                        // userEmailDisplay was here, now removed.
                         balanceDisplay.textContent = `$${data.balance.toFixed(2)}`;
                     }
                     // Hide loader once data is loaded
