@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber SMM Panel - System Access</title>
+    <title>SMM Panel - Welcome</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS STYLES */
+        /* PROFESSIONAL WHITE THEME CSS */
         :root {
-            --primary-font: 'Orbitron', sans-serif;
-            --secondary-font: 'Audiowide', cursive;
-            --dark-navy: #0a0f1e;
-            --neon-blue: #00f6ff;
-            --neon-pink: #ff00ff;
-            --neon-purple: #9d00ff;
-            --cyber-white: #f0f0f0;
-            --error-red: #ff4d4d;
-            --success-green: #00ff89;
-            --background-glow: radial-gradient(circle at 50% 50%, rgba(0, 246, 255, 0.1), rgba(10, 15, 30, 0) 70%);
+            --primary-font: 'Poppins', sans-serif;
+            --primary-color: #4A90E2; /* A professional blue */
+            --light-gray: #f4f7f6;
+            --medium-gray: #e8e8e8;
+            --dark-gray: #555;
+            --text-color: #333;
+            --white: #ffffff;
+            --error-red: #d93025;
+            --success-green: #1e8e3e;
         }
 
         * {
@@ -31,55 +30,34 @@
 
         body {
             font-family: var(--primary-font);
-            background-color: var(--dark-navy);
-            color: var(--cyber-white);
+            background-color: var(--light-gray);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
-            background-image: var(--background-glow);
         }
 
-        /* Digital Rain Background */
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        #matrix-canvas {
-            display: block;
-        }
-
-        /* Glassmorphism Panel Style */
-        .glassmorphism-panel {
-            background: rgba(20, 28, 56, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 246, 255, 0.2);
-            border-radius: 15px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 246, 255, 0.1) inset;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Auth Container */
+        /* Main Container for Forms */
         .auth-container {
-            position: relative;
-            z-index: 2;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             padding: 20px;
         }
 
+        .form-panel {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .form-container {
             display: none;
             flex-direction: column;
@@ -89,27 +67,22 @@
         .form-container.active {
             display: flex;
         }
-
-        .form-title {
-            font-family: var(--secondary-font);
+        
+        .form-header {
             text-align: center;
-            color: var(--neon-blue);
-            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
-            letter-spacing: 2px;
-            animation: text-flicker 3s linear infinite;
+            margin-bottom: 1rem;
         }
 
-        @keyframes text-flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px var(--neon-blue), 0 0 11px var(--neon-blue), 0 0 19px var(--neon-blue); }
-            20%, 24%, 55% { text-shadow: none; }
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
         }
 
         .form-subtitle {
-            text-align: center;
-            color: var(--cyber-white);
-            opacity: 0.7;
-            font-size: 0.9rem;
-            margin-top: -1.2rem;
+            font-size: 1rem;
+            color: var(--dark-gray);
         }
 
         /* Input Fields */
@@ -119,11 +92,11 @@
 
         .input-group input {
             width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(0, 246, 255, 0.3);
-            padding: 10px 5px;
-            color: var(--cyber-white);
+            background-color: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 14px;
+            color: var(--text-color);
             font-family: var(--primary-font);
             font-size: 1rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -131,79 +104,45 @@
 
         .input-group input:focus {
             outline: none;
-            border-bottom-color: var(--neon-pink);
-            box-shadow: 0 5px 15px -10px var(--neon-pink);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
 
-        .input-group label {
-            position: absolute;
-            top: 10px;
-            left: 5px;
-            color: rgba(255, 255, 255, 0.5);
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus + label,
-        .input-group input:valid + label {
-            top: -15px;
-            font-size: 0.8rem;
-            color: var(--neon-pink);
-        }
-
-        /* Holographic Button Style */
-        .btn.holographic {
+        /* Button Style */
+        .btn {
             width: 100%;
             padding: 15px;
-            font-family: var(--secondary-font);
-            font-size: 1.2rem;
-            color: var(--neon-blue);
-            background: transparent;
-            border: 2px solid var(--neon-blue);
+            font-family: var(--primary-font);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            background-color: var(--primary-color);
+            border: none;
             border-radius: 8px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
-            text-shadow: 0 0 3px var(--neon-blue);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .btn.holographic:hover {
-            color: var(--dark-navy);
-            background-color: var(--neon-blue);
-            box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue);
-        }
-
-        .btn.holographic .btn-glow {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                transparent,
-                rgba(255, 0, 255, 0.5),
-                transparent 30%
-            );
-            animation: rotate 4s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .btn:hover {
+            background-color: #357ABD; /* A slightly darker blue */
+            transform: translateY(-2px);
         }
         
+        .btn:active {
+            transform: translateY(0);
+        }
+
         /* Switch Form Link */
         .switch-form-text {
             text-align: center;
             font-size: 0.9rem;
+            color: var(--dark-gray);
         }
 
         .switch-form-text a {
-            color: var(--neon-pink);
+            color: var(--primary-color);
             text-decoration: none;
-            font-weight: bold;
-            text-shadow: 0 0 5px var(--neon-pink);
+            font-weight: 600;
             cursor: pointer;
         }
         .switch-form-text a:hover {
@@ -213,75 +152,70 @@
         /* Message Display */
         .message {
             text-align: center;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             font-size: 0.9rem;
             display: none; /* Hidden by default */
+            border: 1px solid transparent;
         }
         .message.error {
             color: var(--error-red);
-            border: 1px solid var(--error-red);
+            background-color: rgba(217, 48, 37, 0.1);
+            border-color: rgba(217, 48, 37, 0.2);
         }
         .message.success {
             color: var(--success-green);
-            border: 1px solid var(--success-green);
+            background-color: rgba(30, 142, 62, 0.1);
+            border-color: rgba(30, 142, 62, 0.2);
         }
 
     </style>
 </head>
 <body>
 
-    <div id="canvas-container">
-        <canvas id="matrix-canvas"></canvas>
-    </div>
-
     <div class="auth-container">
-        <!-- Login Form -->
-        <div id="login-form-container" class="form-container glassmorphism-panel active">
-            <h2 class="form-title">SYSTEM LOGIN</h2>
-            <p class="form-subtitle">// Access your control panel</p>
-            <form id="login-form">
-                <div class="input-group">
-                    <input type="email" id="login-email" required>
-                    <label for="login-email">ID (Email)</label>
+        <div class="form-panel">
+            <!-- Login Form -->
+            <div id="login-form-container" class="form-container active">
+                <div class="form-header">
+                    <h1 class="form-title">Member Login</h1>
+                    <p class="form-subtitle">Welcome back! Please enter your details.</p>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="login-password" required>
-                    <label for="login-password">Passcode</label>
-                </div>
-                <button type="submit" class="btn holographic">
-                    <span class="btn-text">Authenticate</span>
-                    <span class="btn-glow"></span>
-                </button>
-            </form>
-            <div id="login-message" class="message"></div>
-            <p class="switch-form-text">
-                No account? <a id="show-register">Initialize Registration</a>
-            </p>
-        </div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="email" id="login-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+                <div id="login-message" class="message"></div>
+                <p class="switch-form-text">
+                    Don't have an account? <a id="show-register">Sign Up</a>
+                </p>
+            </div>
 
-        <!-- Registration Form -->
-        <div id="register-form-container" class="form-container glassmorphism-panel">
-            <h2 class="form-title">NEW USER PROTOCOL</h2>
-            <p class="form-subtitle">// Create your system identity</p>
-            <form id="register-form">
-                <div class="input-group">
-                    <input type="email" id="register-email" required>
-                    <label for="register-email">ID (Email)</label>
+            <!-- Registration Form -->
+            <div id="register-form-container" class="form-container">
+                <div class="form-header">
+                    <h1 class="form-title">Create Account</h1>
+                    <p class="form-subtitle">Get started with our SMM panel today.</p>
                 </div>
-                <div class="input-group">
-                    <input type="password" id="register-password" minlength="6" required>
-                    <label for="register-password">Passcode (min 6 chars)</label>
-                </div>
-                <button type="submit" class="btn holographic">
-                    <span class="btn-text">Register Identity</span>
-                    <span class="btn-glow"></span>
-                </button>
-            </form>
-            <div id="register-message" class="message"></div>
-            <p class="switch-form-text">
-                Already registered? <a id="show-login">Return to Login</a>
-            </p>
+                <form id="register-form">
+                    <div class="input-group">
+                        <input type="email" id="register-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="register-password" placeholder="Password (min. 6 characters)" minlength="6" required>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+                <div id="register-message" class="message"></div>
+                <p class="switch-form-text">
+                    Already have an account? <a id="show-login">Sign In</a>
+                </p>
+            </div>
         </div>
     </div>
     
@@ -293,7 +227,7 @@
     <script>
         // JAVASCRIPT LOGIC
 
-        // --- 1. FIREBASE CONFIGURATION (Your new details have been added) ---
+        // --- 1. FIREBASE CONFIGURATION (Your details are included) ---
         const firebaseConfig = {
             apiKey: "AIzaSyCeCuaG-Fk6AHMS24ozaEj9KBnra_53v5g",
             authDomain: "foxxi-cdb87.firebaseapp.com",
@@ -327,59 +261,34 @@
                 registerContainer.classList.remove('active');
                 loginContainer.classList.add('active');
             });
-            
-            // Digital Rain Effect
-            const canvas = document.getElementById('matrix-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()';
-                const fontSize = 16;
-                const columns = canvas.width / fontSize;
-
-                const drops = [];
-                for (let x = 0; x < columns; x++) {
-                    drops[x] = 1;
-                }
-
-                function drawMatrix() {
-                    ctx.fillStyle = 'rgba(10, 15, 30, 0.05)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    ctx.fillStyle = 'var(--neon-blue)';
-                    ctx.font = `${fontSize}px monospace`;
-
-                    for (let i = 0; i < drops.length; i++) {
-                        const text = letters[Math.floor(Math.random() * letters.length)];
-                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                            drops[i] = 0;
-                        }
-                        drops[i]++;
-                    }
-                }
-                setInterval(drawMatrix, 40);
-            }
         });
 
         // --- 3. FIREBASE AUTHENTICATION LOGIC ---
         
-        // Helper to display messages
+        // Helper to display messages and handle loading state
         const showMessage = (elementId, text, type) => {
             const el = document.getElementById(elementId);
             el.textContent = text;
             el.className = `message ${type}`; // 'error' or 'success'
             el.style.display = 'block';
         };
+
+        const setLoadingState = (form, isLoading) => {
+            const button = form.querySelector('button');
+            if (isLoading) {
+                button.disabled = true;
+                button.textContent = 'Processing...';
+            } else {
+                button.disabled = false;
+                button.textContent = form.id === 'login-form' ? 'Sign In' : 'Create Account';
+            }
+        };
         
         // Registration
         const registerForm = document.getElementById('register-form');
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            setLoadingState(registerForm, true);
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const messageEl = 'register-message';
@@ -395,15 +304,15 @@
                         createdAt: new Date().toISOString()
                     })
                     .then(() => {
-                        showMessage(messageEl, 'Registration successful! Redirecting to dashboard...', 'success');
+                        showMessage(messageEl, 'Account created! Redirecting...', 'success');
                         setTimeout(() => {
-                            // In a real app, you would redirect to the main dashboard page
-                            window.location.href = 'dashboard.html'; // Create this file next
+                            window.location.href = 'dashboard.html'; // Redirect to dashboard
                         }, 2000);
                     });
                 })
                 .catch((error) => {
                     showMessage(messageEl, error.message, 'error');
+                    setLoadingState(registerForm, false);
                 });
         });
 
@@ -411,20 +320,22 @@
         const loginForm = document.getElementById('login-form');
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            setLoadingState(loginForm, true);
+
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const messageEl = 'login-message';
 
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    showMessage(messageEl, 'Authentication successful. Accessing dashboard...', 'success');
+                    showMessage(messageEl, 'Login successful. Loading dashboard...', 'success');
                     setTimeout(() => {
-                        // In a real app, you would redirect to the main dashboard page
-                        window.location.href = 'dashboard.html'; // Create this file next
+                        window.location.href = 'dashboard.html'; // Redirect to dashboard
                     }, 2000);
                 })
                 .catch((error) => {
                     showMessage(messageEl, error.message, 'error');
+                    setLoadingState(loginForm, false);
                 });
         });
 
