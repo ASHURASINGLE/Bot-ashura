@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - SMM Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reusing Common Styles */
+        :root {
+            --primary-font: 'Poppins', sans-serif;
+            --primary-color: #4A90E2;
+            --primary-color-light: #e9f2fe;
+            --light-gray: #f4f7f6;
+            --medium-gray: #e8e8e8;
+            --dark-gray: #888;
+            --text-color: #333;
+            --white: #ffffff;
+            --sidebar-bg: #ffffff;
+            --body-bg: #f8f9fa;
+            --success-color: #28a745;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--primary-font); background-color: var(--body-bg); color: var(--text-color); }
+
+        /* Loader and Sidebar (Copied) */
+        .loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--body-bg); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loader { border: 5px solid var(--light-gray); border-top: 5px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .top-header { background-color: var(--white); border-bottom: 1px solid var(--medium-gray); padding: 1rem 1.5rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; margin-right: 1.5rem; }
+        .menu-toggle svg { width: 24px; height: 24px; color: var(--text-color); }
+        .header-title { font-size: 1.5rem; font-weight: 600; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); padding: 2rem 1rem; display: flex; flex-direction: column; border-right: 1px solid var(--medium-gray); position: fixed; top: 0; left: 0; height: 100%; z-index: 1200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1100; }
+        .sidebar-overlay.active { display: block; }
+        .sidebar-header { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); text-align: center; margin-bottom: 2.5rem; }
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item { margin-bottom: 0.5rem; }
+        .nav-link { display: flex; align-items: center; padding: 1rem; color: var(--dark-gray); text-decoration: none; border-radius: 8px; transition: background-color 0.3s, color 0.3s; font-weight: 500; }
+        .nav-link svg { width: 22px; height: 22px; margin-right: 1rem; }
+        .nav-link:hover { background-color: var(--light-gray); }
+        .nav-link.active { background-color: var(--primary-color-light); color: var(--primary-color); }
+        .logout-link { display: flex; align-items: center; padding: 1rem; color: var(--dark-gray); text-decoration: none; border-radius: 8px; transition: background-color 0.3s, color 0.3s; font-weight: 500; cursor: pointer; }
+        .logout-link:hover { background-color: #ffebee; color: #c62828; }
+        .logout-link svg { width: 22px; height: 22px; margin-right: 1rem; }
+        
+        /* Wallet Page Styles */
+        .main-content {
+            padding: 2rem 1.5rem;
+        }
+        .wallet-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .wallet-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--medium-gray);
+            margin-bottom: 2rem;
+        }
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .wallet-info .label {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.25rem;
+        }
+        .wallet-info .balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .wallet-info .user-email {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .add-funds-btn {
+            background-color: var(--success-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .add-funds-btn svg { width: 20px; height: 20px; }
+        .add-funds-btn:hover {
+            background-color: #218838;
+        }
+        
+        .transactions-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--medium-gray);
+        }
+        .transactions-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .no-transactions {
+            text-align: center;
+            padding: 2rem;
+            color: var(--dark-gray);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <div class="sidebar-overlay"></div>
+    <aside class="sidebar">
+        <h1 class="sidebar-header">SMM Panel</h1>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="new-order.html" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    New Order
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="order-history.html" class="nav-link">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    Order History
+                </a>
+            </li>
+             <li class="nav-item">
+                <a href="wallet.html" class="nav-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    Wallet
+                </a>
+            </li>
+        </ul>
+        <a id="logout-button" class="logout-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Logout
+        </a>
+    </aside>
+
+    <div class="page-container">
+        <header class="top-header">
+            <button class="menu-toggle" id="menu-toggle-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <h2 class="header-title">My Wallet</h2>
+        </header>
+
+        <main class="main-content">
+            <div class="wallet-container">
+                <div class="wallet-card">
+                    <div class="wallet-header">
+                        <div class="wallet-info">
+                             <p class="user-email" id="user-email-display">loading...</p>
+                             <p class="label">Available Balance</p>
+                             <h2 class="balance" id="balance-display">$0.00</h2>
+                        </div>
+                        <button class="add-funds-btn" id="add-funds-btn">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                           Add Funds
+                        </button>
+                    </div>
+                </div>
+
+                <div class="transactions-card">
+                    <h3>Transaction History</h3>
+                    <div id="transactions-container">
+                        <p class="no-transactions">No transactions found.</p>
+                        <!-- Transaction history table will go here in the future -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <script>
+        // --- 1. FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeCuaG-Fk6AHMS24ozaEj9KBnra_53v5g",
+            authDomain: "foxxi-cdb87.firebaseapp.com",
+            databaseURL: "https://foxxi-cdb87-default-rtdb.firebaseio.com",
+            projectId: "foxxi-cdb87",
+            storageBucket: "foxxi-cdb87.appspot.com",
+            messagingSenderId: "423683382738",
+            appId: "1:423683382738:android:add26fe48e17c2f6be3c0b"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        // --- 2. DOM ELEMENTS ---
+        const loader = document.querySelector('.loader-wrapper');
+        const logoutButton = document.getElementById('logout-button');
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.querySelector('.sidebar-overlay');
+        const userEmailDisplay = document.getElementById('user-email-display');
+        const balanceDisplay = document.getElementById('balance-display');
+        const addFundsBtn = document.getElementById('add-funds-btn');
+
+        // --- 3. SIDEBAR & LOGOUT ---
+        function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
+        menuToggleBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+        logoutButton.addEventListener('click', () => auth.signOut());
+
+        // --- 4. AUTH & PAGE INITIALIZATION ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, fetch their data
+                const userRef = db.ref('users/' + user.uid);
+                userRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        userEmailDisplay.textContent = data.email;
+                        balanceDisplay.textContent = `$${data.balance.toFixed(2)}`;
+                    }
+                    loader.style.display = 'none';
+                });
+            } else {
+                // No user is signed in, redirect to login.
+                window.location.replace('index.html');
+            }
+        });
+
+        // --- 5. "ADD FUNDS" FUNCTIONALITY ---
+        addFundsBtn.addEventListener('click', () => {
+            // For now, this is a placeholder. 
+            // In a real app, this would open a payment modal (e.g., Stripe, PayPal).
+            alert("Payment gateway integration is required for this feature.");
+        });
+
+    </script>
+</body>
+</html>
