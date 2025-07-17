@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* PROFESSIONAL WHITE THEME CSS (ICONS ADDED) */
+        /* PROFESSIONAL WHITE THEME CSS */
         :root {
             --primary-font: 'Poppins', sans-serif;
             --primary-color: #4A90E2; /* A professional blue */
@@ -92,19 +92,18 @@
             gap: 1rem; 
         }
 
-        /* --- NEW --- Input Group now positions the icon */
+        /* Input Group with Icon */
         .input-group {
             position: relative;
         }
         
-        /* --- NEW --- Icon Styling */
         .input-icon {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--icon-color);
-            pointer-events: none; /* Allows clicking through the icon */
+            pointer-events: none;
             transition: color 0.3s ease;
         }
 
@@ -118,7 +117,7 @@
             background-color: var(--light-gray);
             border: 1px solid var(--medium-gray);
             border-radius: 8px;
-            padding: 12px 14px 12px 45px; /* --- CHANGED --- Left padding for icon */
+            padding: 12px 14px 12px 45px; /* Left padding for icon */
             color: var(--text-color);
             font-family: var(--primary-font);
             font-size: 1rem;
@@ -130,8 +129,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
-
-        /* --- NEW --- Icon color changes when input is focused */
+        
         .input-group:focus-within .input-icon {
             color: var(--primary-color);
         }
@@ -265,7 +263,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
-        // JAVASCRIPT LOGIC (No changes needed here)
+        // JAVASCRIPT LOGIC
 
         // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = {
@@ -282,6 +280,14 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
+
+        // --- AUTH REDIRECT ---
+        // If a user is already logged in, redirect them to the dashboard immediately
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                window.location.replace('dashboard.html');
+            }
+        });
 
         // --- 2. UI AND FORM SWITCHING LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -318,6 +324,7 @@
                 button.disabled = true;
                 button.textContent = 'Processing...';
             } else {
+                button.disabled = false;
                 button.textContent = form.id === 'login-form' ? 'Sign In' : 'Create Account';
             }
         };
@@ -340,10 +347,11 @@
                         createdAt: new Date().toISOString()
                     })
                     .then(() => {
-                        showMessage(messageEl, 'Account created! Redirecting...', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
+                        // The onAuthStateChanged listener will handle the redirect
+                    })
+                    .catch((dbError) => {
+                        showMessage(messageEl, dbError.message, 'error');
+                        setLoadingState(registerForm, false);
                     });
                 })
                 .catch((error) => {
@@ -363,10 +371,7 @@
 
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    showMessage(messageEl, 'Login successful. Loading dashboard...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
+                    // The onAuthStateChanged listener will handle the redirect
                 })
                 .catch((error) => {
                     showMessage(messageEl, error.message, 'error');
